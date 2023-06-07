@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	jsoniter "github.com/json-iterator/go"
-	"github.com/rs/zerolog/log"
-	"github.com/spf13/viper"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	jsoniter "github.com/json-iterator/go"
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -29,11 +30,13 @@ const (
 )
 
 type Telegram struct {
-	apiUrl string
-	token  string
-	chatId string
-	env    string
-	status status
+	enabled bool
+	apiUrl  string
+	token   string
+	chatId  string
+	env     string
+	status  status
+	err     error
 }
 
 var Default *Telegram
@@ -44,11 +47,17 @@ func init() {
 
 func DefaultTelegram() *Telegram {
 	t := &Telegram{
-		apiUrl: "https://api.telegram.org",
-		env:    os.Getenv("env"),
-		token:  viper.GetString("telegram.token"),
-		chatId: viper.GetString("telegram.chatId"),
+		enabled: viper.GetBool("telegram.enabled"),
+		apiUrl:  "https://api.telegram.org",
+		env:     os.Getenv("env"),
+		token:   viper.GetString("telegram.token"),
+		chatId:  viper.GetString("telegram.chatId"),
 	}
+
+	log.Info().
+		Bool("enabled", t.enabled).
+		Str("chatId", t.chatId).
+		Msg("Init to Telegram")
 
 	return t
 }
@@ -95,6 +104,10 @@ func (t *Telegram) SetChatId(chatId string) *Telegram {
 }
 
 func (t *Telegram) action(method, msg string) error {
+	if !t.enabled {
+		return nil
+	}
+
 	if t.env != "" {
 		msg = fmt.Sprintf("[%s] - %s", strings.ToUpper(t.env), msg)
 	}

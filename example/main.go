@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/anhnmt/golang-telegram-simple/telegram"
+	telegram "github.com/anhnmt/golang-telegram-simple"
 	"github.com/rs/zerolog/log"
 )
 

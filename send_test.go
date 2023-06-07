@@ -6,8 +6,8 @@ import (
 
 func TestSendMsg(t *testing.T) {
 	Default.
-		SetChatId("-9003481").
-		SetToken("6108764305:AAGw2BVSPYPjcc8l940bswQUTRUZIssS")
+		SetChatId("-900348150").
+		SetToken("6108764305:AAGw2BVSPYPjcc8l940bswQU")
 
 	type args struct {
 		msg string
@@ -36,8 +36,8 @@ func TestSendMsg(t *testing.T) {
 
 func TestTelegram_SendMsg(t1 *testing.T) {
 	tele := DefaultTelegram().
-		SetChatId("-9003481").
-		SetToken("6108764305:AAGw2BVSPYPjcc8l940bswQUTRUZIssS")
+		SetChatId("-900348150").
+		SetToken("6108764305:AAGw2BVSPYPjcc8l940bsw")
 
 	type args struct {
 		msg string
