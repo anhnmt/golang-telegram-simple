@@ -1,5 +1,9 @@
 # golang-telegram-simple
 
+```bash
+go get -u github.com/anhnmt/golang-telegram-simple
+```
+
 ```go
 package main
 
