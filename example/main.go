@@ -1,8 +1,9 @@
 package main
 
 import (
-	telegram "github.com/anhnmt/golang-telegram-simple"
 	"github.com/rs/zerolog/log"
+
+	telegram "github.com/anhnmt/golang-telegram-simple"
 )
 
 func main() {

@@ -54,17 +54,17 @@ func DefaultTelegram() *Telegram {
 		chatId:  viper.GetString("telegram.chatId"),
 	}
 
-	log.Info().
-		Bool("enabled", t.enabled).
-		Str("chatId", t.chatId).
-		Msg("Init to Telegram")
-
 	return t
 }
 
 func NewTelegram(env string) {
 	Default = DefaultTelegram().
 		SetEnv(env)
+
+	log.Info().
+		Bool("enabled", Default.enabled).
+		Str("chatId", Default.chatId).
+		Msg("Init to Telegram")
 }
 
 func SetStatus(status status) *Telegram {
@@ -110,6 +110,10 @@ func (t *Telegram) action(method, msg string) error {
 
 	if t.env != "" {
 		msg = fmt.Sprintf("[%s] - %s", strings.ToUpper(t.env), msg)
+	}
+
+	if t.err != nil {
+		msg = fmt.Sprintf("\n- Error: %v\n%s", t.err, msg)
 	}
 
 	switch t.status {
