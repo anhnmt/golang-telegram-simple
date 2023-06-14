@@ -108,12 +108,15 @@ func (t *Telegram) action(method, msg string) error {
 		return nil
 	}
 
-	if t.env != "" {
-		msg = fmt.Sprintf("[%s] - %s", strings.ToUpper(t.env), msg)
-	}
-
 	if t.err != nil {
 		msg = fmt.Sprintf("\n- Error: %v\n%s", t.err, msg)
+		defer func(t *Telegram) {
+			t.err = nil
+		}(t)
+	}
+
+	if t.env != "" {
+		msg = fmt.Sprintf("[%s] - %s", strings.ToUpper(t.env), msg)
 	}
 
 	switch t.status {
