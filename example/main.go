@@ -10,6 +10,7 @@ func main() {
 	log.Info().Msg("Hello, world!")
 
 	telegram.OK().
+		SetEnabled(true).
 		SetEnv("DEV").
 		SetToken("123").
 		SetChatId("-123456789").

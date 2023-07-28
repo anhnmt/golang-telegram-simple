@@ -67,6 +67,15 @@ func NewTelegram(env string) {
 		Msg("Init to Telegram")
 }
 
+func SetEnabled(enable bool) *Telegram {
+	return Default.SetEnabled(enable)
+}
+
+func (t *Telegram) SetEnabled(enabled bool) *Telegram {
+	t.enabled = enabled
+	return t
+}
+
 func SetStatus(status status) *Telegram {
 	return Default.SetStatus(status)
 }
