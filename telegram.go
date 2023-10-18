@@ -47,11 +47,11 @@ func init() {
 
 func DefaultTelegram() *Telegram {
 	t := &Telegram{
-		enabled: viper.GetBool("telegram.enabled"),
+		enabled: viper.GetBool("TELEGRAM_ENABLED"),
 		apiUrl:  "https://api.telegram.org",
 		env:     os.Getenv("env"),
-		token:   viper.GetString("telegram.token"),
-		chatId:  viper.GetString("telegram.chatId"),
+		token:   viper.GetString("TELEGRAM_TOKEN"),
+		chatId:  viper.GetString("TELEGRAM_CHAT_ID"),
 	}
 
 	return t
