@@ -35,17 +35,17 @@ type Telegram struct {
 	err     error
 }
 
-var defaultLogger atomic.Value
+var defaultTelegram atomic.Value
 
 func init() {
-	defaultLogger.Store(DefaultTelegram())
+	defaultTelegram.Store(DefaultTelegram())
 }
 
 // Default returns the default Telegram.
-func Default() *Telegram { return defaultLogger.Load().(*Telegram) }
+func Default() *Telegram { return defaultTelegram.Load().(*Telegram) }
 
 func SetDefault(l *Telegram) {
-	defaultLogger.Store(l)
+	defaultTelegram.Store(l)
 }
 
 func DefaultTelegram() *Telegram {
@@ -61,7 +61,7 @@ func DefaultTelegram() *Telegram {
 }
 
 func New(env string) {
-	Default().SetEnv(env)
+	defaultTelegram.Store(Default().SetEnv(env))
 
 	log.Info().
 		Bool("enabled", Default().enabled).
