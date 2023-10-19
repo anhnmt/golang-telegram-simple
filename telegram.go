@@ -5,21 +5,17 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
+	"sync/atomic"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
+	"github.com/bytedance/sonic"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
 const (
 	SendMessage = "sendMessage"
-)
-
-var (
-	json = jsoniter.ConfigFastest
 )
 
 type status int
@@ -39,17 +35,24 @@ type Telegram struct {
 	err     error
 }
 
-var Default *Telegram
+var defaultLogger atomic.Value
 
 func init() {
-	Default = DefaultTelegram()
+	defaultLogger.Store(DefaultTelegram())
+}
+
+// Default returns the default Telegram.
+func Default() *Telegram { return defaultLogger.Load().(*Telegram) }
+
+func SetDefault(l *Telegram) {
+	defaultLogger.Store(l)
 }
 
 func DefaultTelegram() *Telegram {
 	t := &Telegram{
 		enabled: viper.GetBool("TELEGRAM_ENABLED"),
 		apiUrl:  "https://api.telegram.org",
-		env:     os.Getenv("env"),
+		env:     viper.GetString("ENV"),
 		token:   viper.GetString("TELEGRAM_TOKEN"),
 		chatId:  viper.GetString("TELEGRAM_CHAT_ID"),
 	}
@@ -57,18 +60,17 @@ func DefaultTelegram() *Telegram {
 	return t
 }
 
-func NewTelegram(env string) {
-	Default = DefaultTelegram().
-		SetEnv(env)
+func New(env string) {
+	Default().SetEnv(env)
 
 	log.Info().
-		Bool("enabled", Default.enabled).
-		Str("chatId", Default.chatId).
+		Bool("enabled", Default().enabled).
+		Str("chatId", Default().chatId).
 		Msg("Init to Telegram")
 }
 
 func SetEnabled(enable bool) *Telegram {
-	return Default.SetEnabled(enable)
+	return Default().SetEnabled(enable)
 }
 
 func (t *Telegram) SetEnabled(enabled bool) *Telegram {
@@ -77,7 +79,7 @@ func (t *Telegram) SetEnabled(enabled bool) *Telegram {
 }
 
 func SetStatus(status status) *Telegram {
-	return Default.SetStatus(status)
+	return Default().SetStatus(status)
 }
 
 func (t *Telegram) SetStatus(status status) *Telegram {
@@ -86,7 +88,7 @@ func (t *Telegram) SetStatus(status status) *Telegram {
 }
 
 func SetToken(token string) *Telegram {
-	return Default.SetToken(token)
+	return Default().SetToken(token)
 }
 
 func (t *Telegram) SetToken(token string) *Telegram {
@@ -95,7 +97,7 @@ func (t *Telegram) SetToken(token string) *Telegram {
 }
 
 func SetEnv(env string) *Telegram {
-	return Default.SetEnv(env)
+	return Default().SetEnv(env)
 }
 
 func (t *Telegram) SetEnv(env string) *Telegram {
@@ -104,7 +106,7 @@ func (t *Telegram) SetEnv(env string) *Telegram {
 }
 
 func SetChatId(chatId string) *Telegram {
-	return Default.SetChatId(chatId)
+	return Default().SetChatId(chatId)
 }
 
 func (t *Telegram) SetChatId(chatId string) *Telegram {
@@ -141,7 +143,7 @@ func (t *Telegram) action(method, msg string) error {
 	}
 
 	// Chuyển requestBody thành JSON
-	jsonValue, err := json.Marshal(data)
+	jsonValue, err := sonic.Marshal(data)
 	if err != nil {
 		return err
 	}
