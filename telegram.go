@@ -143,7 +143,7 @@ func (t *Telegram) action(method, msg string) error {
 	}
 
 	// Chuyển requestBody thành JSON
-	jsonValue, err := sonic.Marshal(data)
+	body, err := sonic.Marshal(data)
 	if err != nil {
 		return err
 	}
@@ -154,7 +154,7 @@ func (t *Telegram) action(method, msg string) error {
 	// Tạo request
 	url := fmt.Sprintf("%s/bot%s/%s", t.apiUrl, t.token, method)
 
-	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonValue))
+	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		log.Err(err).Msg("Error create http.NewRequest")
 		return err
