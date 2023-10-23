@@ -5,7 +5,7 @@ import (
 )
 
 func TestSendMsg(t *testing.T) {
-	Default.
+	Default().
 		SetChatId("-900348150").
 		SetToken("6108764305:AAGw2BVSPYPjcc8l940bswQU")
 
