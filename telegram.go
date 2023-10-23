@@ -61,7 +61,7 @@ func DefaultTelegram() *Telegram {
 }
 
 func New(env string) {
-	defaultTelegram.Store(Default().SetEnv(env))
+	defaultTelegram.Store(DefaultTelegram().SetEnv(env))
 
 	log.Info().
 		Bool("enabled", Default().enabled).
