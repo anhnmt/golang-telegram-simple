@@ -14,6 +14,7 @@ type Telegram struct {
 	enabled bool
 	chatId  int64
 	env     string
+	token   string
 }
 
 var defaultTelegram atomic.Value
@@ -27,17 +28,19 @@ func SetDefault(t *Telegram) {
 }
 
 func New() (*Telegram, error) {
-	bot, err := tgbotapi.NewBotAPI(viper.GetString(Token))
+	t := &Telegram{
+		env:     viper.GetString(Env),
+		token:   viper.GetString(Token),
+		enabled: viper.GetBool(Enabled),
+		chatId:  viper.GetInt64(ChatId),
+	}
+
+	bot, err := tgbotapi.NewBotAPI(t.token)
 	if err != nil {
 		return nil, err
 	}
 
-	t := &Telegram{
-		bot:     bot,
-		env:     viper.GetString(Env),
-		enabled: viper.GetBool(Enabled),
-		chatId:  viper.GetInt64(ChatId),
-	}
+	t.bot = bot
 
 	return t, nil
 }
@@ -57,6 +60,21 @@ func SetEnv(env string) *Telegram {
 
 func (t *Telegram) SetEnv(env string) *Telegram {
 	t.env = env
+	return t
+}
+
+func SetToken(token string) *Telegram {
+	return Default().SetToken(token)
+}
+
+func (t *Telegram) SetToken(token string) *Telegram {
+	t.token = token
+
+	bot, err := tgbotapi.NewBotAPI(t.token)
+	if err == nil {
+		t.bot = bot
+	}
+
 	return t
 }
 

@@ -19,6 +19,7 @@ func main() {
     telegram.
         SetEnabled(true).
         SetEnv("DEV").
+        SetToken("123456789").
         SetChatId(-123456789).
         OK("Hello, world!")
 }
