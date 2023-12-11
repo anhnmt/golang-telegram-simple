@@ -1,18 +1,17 @@
 package main
 
 import (
-	"github.com/rs/zerolog/log"
+	"fmt"
 
 	telegram "github.com/anhnmt/golang-telegram-simple"
 )
 
 func main() {
-	log.Info().Msg("Hello, world!")
+	fmt.Println("Hello, world!")
 
-	telegram.OK().
+	telegram.
 		SetEnabled(true).
 		SetEnv("DEV").
-		SetToken("123").
-		SetChatId("-123456789").
-		Msg("Hello, world!")
+		SetChatId(-123456789).
+		OK("Hello, world!")
 }

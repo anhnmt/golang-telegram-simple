@@ -7,13 +7,20 @@ go get -u github.com/anhnmt/golang-telegram-simple
 ```go
 package main
 
-func main() {
-	log.Info().Msg("Hello, world!")
+import (
+    "fmt"
 
-	telegram.OK().
-		SetEnv("DEV").
-		SetToken("123").
-		SetChatId("-123456789").
-		Msg("Hello, world!")
+    telegram "github.com/anhnmt/golang-telegram-simple"
+)
+
+func main() {
+    fmt.Println("Hello, world!")
+
+    telegram.
+        SetEnabled(true).
+        SetEnv("DEV").
+        SetChatId(-123456789).
+        OK("Hello, world!")
 }
+
 ```
